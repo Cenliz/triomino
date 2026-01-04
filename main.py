@@ -1,5 +1,8 @@
 # /ᐠ｡ꞈ｡ᐟ\
 
+import pygame
+from pygame.locals import *
+
 class piece():
     def __init__(self,up:int,right:int,left:int):
         self.__up = up
@@ -14,8 +17,20 @@ def create_pieces(max_number:int)->list:
                 pieces.append(piece(a,b,c))
     return pieces
                 
+pygame.init()
+window = pygame.display.set_mode((640,480))
+background = pygame.image.load("./Desktop/projects/triomino/media/stonks_dev.webp").convert()
+window.blit(background,(0,0))
+runing = True
 
 pieces = create_pieces(5)
-print(pieces)
+
+while runing == True:
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            runing = False
+    pygame.display.update()
+
+pygame.quit()
 
 print("\n /\\     /\\\n/  0 A 0  \\")
