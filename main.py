@@ -43,15 +43,28 @@ while running:
     for event in pygame.event.get():
         if event.type == QUIT:
             running = False
+
         if event.type == MOUSEBUTTONDOWN:
-            for i in board.get_points():
-                if i.get_pos()[0]-pieces_size*2/3 < pygame.mouse.get_pos()[0] < i.get_pos()[0]+pieces_size*2/3 and i.get_pos()[1]-pieces_size*2/3 < pygame.mouse.get_pos()[1] < i.get_pos()[1]+pieces_size*2/3 and board.check_point(i) == "placable":
-                    if len(deck) == 0:
+            if pygame.mouse.get_pressed()[0] == True: # left click
+                for i in board.get_points():
+                    if i.get_pos()[0]-pieces_size*2/3 < pygame.mouse.get_pos()[0] < i.get_pos()[0]+pieces_size*2/3 and i.get_pos()[1]-pieces_size*2/3 < pygame.mouse.get_pos()[1] < i.get_pos()[1]+pieces_size*2/3 and board.check_point(i) == "placable":
+                        if len(deck) == 0:
+                            break
+                        placed_pieces.append(deck.pop(random.randint(0,len(deck)-1)))
+                        placed_pieces_location.append(i.get_pos())
+                        board.update_board( i, pieces_size)
                         break
-                    placed_pieces.append(deck.pop(random.randint(0,len(deck)-1)))
-                    placed_pieces_location.append(i.get_pos())
-                    board.update_board( i, pieces_size)
-                    break
+
+        if event.type == MOUSEWHEEL:
+            y = event.y
+            if  y != 0:
+                pieces_size += y
+            if pieces_size < 20:
+                pieces_size = 20
+            if pieces_size > 100:
+                pieces_size = 100
+        
+
                     
 
     clock.tick(fps)
