@@ -1,29 +1,61 @@
 # /ᐠ｡ꞈ｡ᐟ\
 
-def create_board()->dict:
-    board = {}
-    board[(500,500)] = "placable"
-    return board
+class Point():
+    def __init__(self, pos:tuple, direction:str):
+        self.__pos = pos
+        self.__direction = direction
+        self.__state = "placable"
 
-def update_board(board:dict, point:tuple, pieces_size:int):
-    right, left, up, down = False, False, False, False
-    for i in board:
+    def get_pos(self)->tuple:
+        return self.__pos
+    
+    def get_direction(self)->str:
+        return self.__direction
+    
+    def get_state(self)->str:
+        return self.__state
+    
+    def change_state(self)->None:
+        self.__state = "placed"
+        return
+    
+class Board():
+    def __init__(self):
+        self.__points = [Point((500,500), "up")]
+    
+    def get_points(self):
+        return self.__points
+    
+    def create_point(self, pos:tuple, pieces_size:int):
+        if ((pos[0]/pieces_size)%2 == 0 and (pos[1]/pieces_size)%2 == 0) or ((pos[0]/pieces_size)%2 == 1 and (pos[1]/pieces_size)%2 == 1):
+            self.__points.append(Point(pos, "up"))
+            print("up")
+        else:
+            self.__points.append(Point(pos, "down"))
+            print("down")
+        print(pos)
 
-        if i == (point[0]+pieces_size,point[1]):
-            right = True
-        if i == (point[0]-pieces_size,point[1]):
-            left = True
-        if i == (point[0],point[1]+pieces_size):
-            down = True
-        if i == (point[0]-pieces_size,point[1]-pieces_size):
-            up = True
+    
+    def check_point(self, point:Point)->str:
+        return point.get_state()
+    
+    def check_pos(self, pos:tuple)->Point|None:
+        for i in self.__points:
+            if i.get_pos() == pos:
+                return i
+        return None
 
-    if not right:
-        board[(point[0]+pieces_size*2,point[1])] = "placable"
-    if not left:
-        board[(point[0]-pieces_size*2,point[1])] = "placable"
-    if not down:
-        board[(point[0],point[1]+pieces_size*2)] = "placable"
-    if not up:
-        board[(point[0],point[1]-pieces_size*2)] = "placable"
-    return board
+    def update_board(self, point:Point, pieces_size:int):
+        point.change_state()
+ 
+        if self.check_pos((point.get_pos()[0]+pieces_size,point.get_pos()[1])) is None: # right
+            self.create_point((point.get_pos()[0]+pieces_size,point.get_pos()[1]), pieces_size)
+
+        if self.check_pos((point.get_pos()[0]-pieces_size,point.get_pos()[1])) is None: # left
+            self.create_point((point.get_pos()[0]-pieces_size,point.get_pos()[1]), pieces_size)
+        if point.get_direction() == "up":
+            if self.check_pos((point.get_pos()[0],point.get_pos()[1]+pieces_size)) is None : # down
+                self.create_point((point.get_pos()[0],point.get_pos()[1]+pieces_size), pieces_size)
+        else:
+            if self.check_pos((point.get_pos()[0],point.get_pos()[1]-pieces_size)) is None : # up
+                self.create_point((point.get_pos()[0],point.get_pos()[1]-pieces_size), pieces_size)

@@ -21,12 +21,16 @@ def create_pieces()->list:
                 deck.append(Piece(a,b,c))
     return deck
 
-def display_piece(screen:pygame.Surface, font:pygame.font.Font, pc:Piece, place:tuple, size:int)->None:
+def display_piece(screen:pygame.Surface, font:pygame.font.Font, pc:Piece, place:tuple, size:int,direction:str)->None:
     pc_value = pc.get_values()
-    
-    t1 = (place[0], place[1] - size)
-    t2 = (place[0] + size * math.cos(0.5), place[1] + size * math.sin(0.5))
-    t3 = (place[0] - size * math.cos(0.5), place[1] + size * math.sin(0.5))
+    if direction == "up":
+        t1 = (place[0], place[1] - size)
+        t2 = (place[0] + size * math.cos(0.5), place[1] + size * math.sin(0.5))
+        t3 = (place[0] - size * math.cos(0.5), place[1] + size * math.sin(0.5))
+    else:
+        t1 = (place[0], place[1] + size)
+        t2 = (place[0] + size * math.cos(0.5), place[1] - size * math.sin(0.5))
+        t3 = (place[0] - size * math.cos(0.5), place[1] - size * math.sin(0.5))
     li = [t1,t2,t3]
 
     n1 = font.render(str(pc_value[0]),True,(0,0,0))

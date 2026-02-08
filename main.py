@@ -23,7 +23,7 @@ while running:
         case 'test':
             if loaded == False:
                 deck = pieces_file.create_pieces()
-                board = map_file.create_board()
+                board = map_file.Board()
                 placed_pieces = []
                 placed_pieces_location = []
                 player1_deck = []
@@ -32,26 +32,25 @@ while running:
                 loaded = True
             else:
                 screen.fill("purple")
-                for i in board:
-                    pygame.draw.circle(screen, (0,0,0), i, 10)
+                for i in board.get_points():
+                    pygame.draw.circle(screen, (0,0,0), i.get_pos(), 10)
                 if len(placed_pieces) != 0:
                     for i in range(len(placed_pieces)):
-                        pieces_file.display_piece(screen, font, placed_pieces[i], placed_pieces_location[i], pieces_size)
+                        pieces_file.display_piece(screen, font, placed_pieces[i], placed_pieces_location[i], pieces_size, board.check_pos(placed_pieces_location[i]).get_direction())
                 for i in range(len(player1_deck)):
-                    pieces_file.display_piece(screen,font,player1_deck[i],(150*i+100,650),pieces_size)
+                    pieces_file.display_piece(screen,font,player1_deck[i],(150*i+100,650),pieces_size,"up")
 
     for event in pygame.event.get():
         if event.type == QUIT:
             running = False
         if event.type == MOUSEBUTTONDOWN:
-            for i in board:
-                if i[0]-pieces_size*2/3 < pygame.mouse.get_pos()[0] < i[0]+pieces_size*2/3 and i[1]-pieces_size*2/3 < pygame.mouse.get_pos()[1] < i[1]+pieces_size*2/3 and board[i] == "placable":
+            for i in board.get_points():
+                if i.get_pos()[0]-pieces_size*2/3 < pygame.mouse.get_pos()[0] < i.get_pos()[0]+pieces_size*2/3 and i.get_pos()[1]-pieces_size*2/3 < pygame.mouse.get_pos()[1] < i.get_pos()[1]+pieces_size*2/3 and board.check_point(i) == "placable":
                     if len(deck) == 0:
                         break
                     placed_pieces.append(deck.pop(random.randint(0,len(deck)-1)))
-                    placed_pieces_location.append(i)
-                    board[i] = "placed"
-                    board = map_file.update_board(board, i, pieces_size)
+                    placed_pieces_location.append(i.get_pos())
+                    board.update_board( i, pieces_size)
                     break
                     
 
