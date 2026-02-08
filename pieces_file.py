@@ -21,7 +21,7 @@ def create_pieces()->list:
                 deck.append(Piece(a,b,c))
     return deck
 
-def display_piece(screen:pygame.Surface, font:pygame.font.Font, pc:Piece, place:tuple, size:int,direction:str)->None:
+def display_piece(screen:pygame.Surface, font:pygame.font.Font, pc:Piece, place:tuple, size:float,direction:str)->None:
     pc_value = pc.get_values()
     if direction == "up":
         t1 = (place[0], place[1] - size)

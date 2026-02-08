@@ -26,8 +26,8 @@ class Board():
     def get_points(self):
         return self.__points
     
-    def create_point(self, pos:tuple, pieces_size:int):
-        if ((pos[0]/pieces_size)%2 == 0 and (pos[1]/pieces_size)%2 == 0) or ((pos[0]/pieces_size)%2 == 1 and (pos[1]/pieces_size)%2 == 1):
+    def create_point(self, pos:tuple, pieces_size:float):
+        if ((pos[0]/pieces_size)%3 == 1 and (pos[1]/pieces_size)%3 == 1) or ((pos[0]/pieces_size)%3 != 1 and (pos[1]/pieces_size)%3 != 1):
             self.__points.append(Point(pos, "up"))
             print("up")
         else:
@@ -45,17 +45,18 @@ class Board():
                 return i
         return None
 
-    def update_board(self, point:Point, pieces_size:int):
+    def update_board(self, point:Point, pieces_size:float):
         point.change_state()
- 
-        if self.check_pos((point.get_pos()[0]+pieces_size,point.get_pos()[1])) is None: # right
-            self.create_point((point.get_pos()[0]+pieces_size,point.get_pos()[1]), pieces_size)
+        size = pieces_size * 1.5
 
-        if self.check_pos((point.get_pos()[0]-pieces_size,point.get_pos()[1])) is None: # left
-            self.create_point((point.get_pos()[0]-pieces_size,point.get_pos()[1]), pieces_size)
+        if self.check_pos((point.get_pos()[0]+size,point.get_pos()[1])) is None: # right
+            self.create_point((point.get_pos()[0]+size,point.get_pos()[1]), pieces_size)
+
+        if self.check_pos((point.get_pos()[0]-size,point.get_pos()[1])) is None: # left
+            self.create_point((point.get_pos()[0]-size,point.get_pos()[1]), pieces_size)
         if point.get_direction() == "up":
-            if self.check_pos((point.get_pos()[0],point.get_pos()[1]+pieces_size)) is None : # down
-                self.create_point((point.get_pos()[0],point.get_pos()[1]+pieces_size), pieces_size)
+            if self.check_pos((point.get_pos()[0],point.get_pos()[1]+size)) is None : # down
+                self.create_point((point.get_pos()[0],point.get_pos()[1]+size), pieces_size)
         else:
-            if self.check_pos((point.get_pos()[0],point.get_pos()[1]-pieces_size)) is None : # up
-                self.create_point((point.get_pos()[0],point.get_pos()[1]-pieces_size), pieces_size)
+            if self.check_pos((point.get_pos()[0],point.get_pos()[1]-size)) is None : # up
+                self.create_point((point.get_pos()[0],point.get_pos()[1]-size), pieces_size)
